@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultComboBoxModel;
 
 /**
  *
@@ -20,6 +21,7 @@ import java.util.logging.Logger;
 public class Articulos extends javax.swing.JFrame {
 
     static public ResultSet r;
+    static Connection connection;
     /**
      * Creates new form Articulos
      */
@@ -30,20 +32,37 @@ public class Articulos extends javax.swing.JFrame {
         String url = "jdbc:mysql://localhost:3306/entornos";
         String user = "root";
         String pass = "";
-        Connection connection = DriverManager.getConnection(url,user,pass);
+        connection = DriverManager.getConnection(url,user,pass);
         
         Statement s = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-        String query = "select * from articulos";
+        String query = "select * FROM articulos A";
         r = s.executeQuery(query);
         r.first();
-        cod_art.setText(r.getString("cod_articulo"));
-        arti.setText(r.getString("articulo"));
-        fabri.setText(r.getString("fabricante"));
-        peso.setText(r.getString("peso"));
-        preciovent.setText(r.getString("precio_venta"));
-        preciocost.setText(r.getString("precio_coste"));
-        existenc.setText(r.getString("existencias"));
+        cod_art.setText(r.getString("A.cod_articulo"));
+        arti.setText(r.getString("A.articulo"));
+    
+        peso.setText(r.getString("A.peso"));
+        preciovent.setText(r.getString("A.precio_venta"));
+        preciocost.setText(r.getString("A.precio_coste"));
+        existenc.setText(r.getString("A.existencias"));
+    
+
+    //llamada combobox//
+    connection = DriverManager.getConnection(url,user,pass);    
+    String query2 = "select * from fabricantes";
+    ResultSet r2;
+    Statement s2 = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+    r2 = s2.executeQuery(query2);
+    DefaultComboBoxModel value1 = new DefaultComboBoxModel();
+    
+    while (r2.next()){
+        value1.addElement(r2.getString("NOMBRE"));
     }
+    fabri.setModel(value1);
+    fabri.setSelectedItem(getNomFabricante(r.getInt("A.fabricante")));
+    
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -59,7 +78,6 @@ public class Articulos extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         cod_art = new javax.swing.JTextField();
         arti = new javax.swing.JTextField();
-        fabri = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
@@ -81,6 +99,7 @@ public class Articulos extends javax.swing.JFrame {
         inicio = new javax.swing.JButton();
         delete = new javax.swing.JButton();
         jLabel9 = new javax.swing.JLabel();
+        fabri = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -93,11 +112,10 @@ public class Articulos extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel3.setText("Fabricante");
 
+        cod_art.setEditable(false);
         cod_art.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         arti.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-
-        fabri.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel4.setText("Peso");
@@ -115,6 +133,11 @@ public class Articulos extends javax.swing.JFrame {
         jLabel8.setText("Existencias");
 
         peso.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        peso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                pesoActionPerformed(evt);
+            }
+        });
 
         category.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
@@ -197,6 +220,13 @@ public class Articulos extends javax.swing.JFrame {
         jLabel9.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
         jLabel9.setText("ARTÍCULOS");
 
+        fabri.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        fabri.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fabriActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -210,7 +240,7 @@ public class Articulos extends javax.swing.JFrame {
                 .addComponent(next, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(33, 33, 33)
                 .addComponent(last, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(inicio, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(19, 19, 19))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -223,23 +253,22 @@ public class Articulos extends javax.swing.JFrame {
                     .addComponent(jLabel1)
                     .addComponent(jLabel2)
                     .addComponent(jLabel3)
-                    .addComponent(jLabel4)
                     .addComponent(jLabel6)
                     .addComponent(jLabel7)
                     .addComponent(jLabel8)
-                    .addComponent(jLabel5))
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel4))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(category, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(peso, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(fabri, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(preciovent, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cod_art, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(arti, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, 0)
+                            .addComponent(arti, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(category, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(peso, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fabri, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(85, 85, 85)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(77, 77, 77)
@@ -252,7 +281,6 @@ public class Articulos extends javax.swing.JFrame {
                                     .addComponent(cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(132, 132, 132))))
                     .addGroup(layout.createSequentialGroup()
@@ -274,21 +302,22 @@ public class Articulos extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(arti, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(arti, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel2)
+                                .addComponent(guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(fabri, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jLabel3))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGap(13, 13, 13)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel4)
-                                    .addComponent(peso, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(peso, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel4)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(38, 38, 38)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -306,14 +335,14 @@ public class Articulos extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(30, 30, 30)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel7)
-                    .addComponent(preciocost, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(preciocost, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
                     .addComponent(existenc, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(first, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(previous, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -329,16 +358,62 @@ public class Articulos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    public int getCodFabricante(String nombre){
+        
+        int codigo=0;
+        
+        try {
+            
+            Statement s = connection.createStatement();
+            String query2 = "select cod_fabricante "
+                            + "FROM fabricantes "
+                            + "where nombre='"+nombre+"'";
+            ResultSet r2;
+            r2=s.executeQuery(query2);
+            r2.first();
+            codigo=r2.getInt("COD_FABRICANTE");
+        } catch (SQLException ex) {
+            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return codigo;
+    }
+  
+    
+    
+    
+    
+    public String getNomFabricante(int cod_fabricante){
+        
+        String nombre="";
+
+        try{
+        Statement s = connection.createStatement();
+            String query2 = "select nombre "
+                            + "FROM fabricantes "
+                            + "where cod_fabricante="+cod_fabricante;
+            ResultSet r2;
+            r2=s.executeQuery(query2);
+            r2.first();
+            nombre=r2.getString("NOMBRE");
+        } catch (SQLException ex) {
+            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return nombre;
+        }
+    
+    
+
+    
     private void firstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstActionPerformed
         try {
             r.first();
-            cod_art.setText(r.getString("cod_articulo"));
-            arti.setText(r.getString("articulo"));
-            fabri.setText(r.getString("fabricante"));
-            peso.setText(r.getString("peso"));
-            preciovent.setText(r.getString("precio_venta"));
-            preciocost.setText(r.getString("precio_coste"));
-            existenc.setText(r.getString("existencias"));
+            cod_art.setText(r.getString("A.cod_articulo"));
+            arti.setText(r.getString("A.articulo"));
+            fabri.setSelectedItem(getNomFabricante(r.getInt("A.fabricante")));
+            peso.setText(r.getString("A.peso"));
+            preciovent.setText(r.getString("A.precio_venta"));
+            preciocost.setText(r.getString("A.precio_coste"));
+            existenc.setText(r.getString("A.existencias"));
             
             
             
@@ -351,13 +426,13 @@ public class Articulos extends javax.swing.JFrame {
     private void lastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastActionPerformed
         try {
             r.last();
-            cod_art.setText(r.getString("cod_articulo"));
-            arti.setText(r.getString("articulo"));
-            fabri.setText(r.getString("fabricante"));
-            peso.setText(r.getString("peso"));
-            preciovent.setText(r.getString("precio_venta"));
-            preciocost.setText(r.getString("precio_coste"));
-            existenc.setText(r.getString("existencias"));
+            cod_art.setText(r.getString("A.cod_articulo"));
+            arti.setText(r.getString("A.articulo"));
+            fabri.setSelectedItem(getNomFabricante(r.getInt("A.fabricante")));
+            peso.setText(r.getString("A.peso"));
+            preciovent.setText(r.getString("A.precio_venta"));
+            preciocost.setText(r.getString("A.precio_coste"));
+            existenc.setText(r.getString("A.existencias"));
             
             
             // TODO add your handling code here:
@@ -370,13 +445,13 @@ public class Articulos extends javax.swing.JFrame {
 
         try {
             if(r.next()){
-                cod_art.setText(r.getString("cod_articulo"));
-                arti.setText(r.getString("articulo"));
-                fabri.setText(r.getString("fabricante"));
-                peso.setText(r.getString("peso"));
-                preciovent.setText(r.getString("precio_venta"));
-                preciocost.setText(r.getString("precio_coste"));
-                existenc.setText(r.getString("existencias"));
+                cod_art.setText(r.getString("A.cod_articulo"));
+                arti.setText(r.getString("A.articulo"));
+                fabri.setSelectedItem(getNomFabricante(r.getInt("A.fabricante")));
+                peso.setText(r.getString("A.peso"));
+                preciovent.setText(r.getString("A.precio_venta"));
+                preciocost.setText(r.getString("A.precio_coste"));
+                existenc.setText(r.getString("A.existencias"));
                 
             }
             
@@ -391,13 +466,13 @@ public class Articulos extends javax.swing.JFrame {
     private void previousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousActionPerformed
         try {
             if(r.previous()){
-                cod_art.setText(r.getString("cod_articulo"));
-                arti.setText(r.getString("articulo"));
-                fabri.setText(r.getString("fabricante"));
-                peso.setText(r.getString("peso"));
-                preciovent.setText(r.getString("precio_venta"));
-                preciocost.setText(r.getString("precio_coste"));
-                existenc.setText(r.getString("existencias"));
+                cod_art.setText(r.getString("A.cod_articulo"));
+                arti.setText(r.getString("A.articulo"));
+                fabri.setSelectedItem(getNomFabricante(r.getInt("A.fabricante")));
+                peso.setText(r.getString("A.peso"));
+                preciovent.setText(r.getString("A.precio_venta"));
+                preciocost.setText(r.getString("A.precio_coste"));
+                existenc.setText(r.getString("A.existencias"));
                 
             }
             
@@ -412,23 +487,23 @@ try {
         String Vcod, Varti, Vfabri, Vpeso, Vcategory, Vpreciovent, Vpreciocost, Vexistenc;
         Vcod = cod_art.getText ();
         Varti = arti.getText ();
-        Vfabri = fabri.getText ();
+        Vfabri = (String) fabri.getSelectedItem ();
+        int cod = getCodFabricante(Vfabri);
+        
         Vpeso = peso.getText ();
         Vcategory = category.getText ();
         Vpreciovent = preciovent.getText ();
         Vpreciocost = preciocost.getText ();
         Vexistenc = existenc.getText ();
-        String url = "jdbc:mysql://localhost:3306/entornos";
-        String user = "root";
-        String pass = "";
-        Connection connection = DriverManager.getConnection(url,user,pass);
+       
         Statement s = connection.createStatement();
-        String query = "update Articulos set ARTICULO='" + Varti + "', FABRICANTE='" + Vfabri + "', PESO='" + Vpeso + "', CATEGORIA='" + Vcategory + "', PRECIO_VENTA='" + Vpreciovent + "', PRECIO_COSTE='" + Vpreciocost + "', EXISTENCIAS='" + Vexistenc + "' WHERE COD_ARTICULO='" + Vcod + "'";
+        s = connection.createStatement();
+        String query = "update Articulos set ARTICULO='" + Varti + "', FABRICANTE='" + cod + "', PESO='" + Vpeso + "', CATEGORIA='" + Vcategory + "', PRECIO_VENTA='" + Vpreciovent + "', PRECIO_COSTE='" + Vpreciocost + "', EXISTENCIAS='" + Vexistenc + "' WHERE COD_ARTICULO='" + Vcod + "'";
         int resultado = s.executeUpdate(query);
         r.refreshRow();
     }
     catch (SQLException ex) {
-            Logger.getLogger(Clientes.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
         }        // TODO add your handling code here:
     }//GEN-LAST:event_editarActionPerformed
 
@@ -447,14 +522,15 @@ try {
             r.first();
                 cod_art.setText(r.getString("cod_articulo"));
                 arti.setText(r.getString("articulo"));
-                fabri.setText(r.getString("fabricante"));
+                fabri.setSelectedItem(r.getString("fabricante"));
                 peso.setText(r.getString("peso"));
                 preciovent.setText(r.getString("precio_venta"));
                 preciocost.setText(r.getString("precio_coste"));
                 existenc.setText(r.getString("existencias"));
+                cod_art.setEditable(false);
             
          } catch (SQLException ex) {
-            Logger.getLogger(Fabricantes.class.getName()).log(Level.SEVERE, null, ex);}
+            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);}
         
         
         
@@ -472,9 +548,10 @@ try {
         nuevo.setVisible(false);
         cancelar.setVisible(true);
         guardar.setVisible(true);
+        cod_art.setEditable(true);
         cod_art.setText("");
         arti.setText("");
-        fabri.setText("");
+        fabri.setSelectedItem("");
         peso.setText("");
         preciovent.setText("");
         preciocost.setText("");
@@ -488,7 +565,7 @@ try {
         String Vcod, Varti, Vfabri, Vpeso, Vcategory, Vpreciovent, Vpreciocost, Vexistenc;
         Vcod = cod_art.getText ();
         Varti = arti.getText ();
-        Vfabri = fabri.getText ();
+        Vfabri = (String) fabri.getSelectedItem ();
         Vpeso = peso.getText ();
         Vcategory = category.getText ();
         Vpreciovent = preciovent.getText ();
@@ -500,7 +577,7 @@ try {
         Connection connection = DriverManager.getConnection(url,user,pass);
         
         Statement s = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-        String query = "insert articulos values ('" + Vcod + "','" + Varti + "','" + Vfabri + "','" + Vpeso + "','" + Vcategory + "','" + Vpreciovent + "','" + Vpreciocost + "','" + Vexistenc + "')";
+        String query = "insert articulos values ('" + Vcod + "','" + Varti + "','" + getCodFabricante(Vfabri) + "','" + Vpeso + "','" + Vcategory + "','" + Vpreciovent + "','" + Vpreciocost + "','" + Vexistenc + "')";
         int resultado = s.executeUpdate(query);
     
         String query2 = "select * from articulos";
@@ -508,7 +585,7 @@ try {
         r.first();
         cod_art.setText(r.getString("cod_articulo"));
                 arti.setText(r.getString("articulo"));
-                fabri.setText(r.getString("fabricante"));
+                fabri.setSelectedItem(r.getString("fabricante"));
                 peso.setText(r.getString("peso"));
                 preciovent.setText(r.getString("precio_venta"));
                 preciocost.setText(r.getString("precio_coste"));
@@ -521,9 +598,10 @@ try {
         nuevo.setVisible(true);
         cancelar.setVisible(false);
         guardar.setVisible(false);
+        cod_art.setEditable(false);
         }
         catch (SQLException ex) {
-            Logger.getLogger(Clientes.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
         }
         
         
@@ -564,7 +642,7 @@ try {
         r.first();
         cod_art.setText(r.getString("cod_articulo"));
                 arti.setText(r.getString("articulo"));
-                fabri.setText(r.getString("fabricante"));
+                fabri.setSelectedItem(r.getString("fabricante"));
                 peso.setText(r.getString("peso"));
                 preciovent.setText(r.getString("precio_venta"));
                 preciocost.setText(r.getString("precio_coste"));
@@ -585,13 +663,22 @@ try {
      
      
      }catch (SQLException ex) {
-            Logger.getLogger(Clientes.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Articulos.class.getName()).log(Level.SEVERE, null, ex);
         }
  
         
         
     }//GEN-LAST:event_deleteActionPerformed
 
+    private void pesoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pesoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_pesoActionPerformed
+
+    private void fabriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fabriActionPerformed
+        // TODO add your handling code here:
+       
+    }//GEN-LAST:event_fabriActionPerformed
+    
     /**
      * @param args the command line arguments
      */
@@ -639,7 +726,7 @@ try {
     private javax.swing.JButton delete;
     private javax.swing.JButton editar;
     private javax.swing.JTextField existenc;
-    private javax.swing.JTextField fabri;
+    private javax.swing.JComboBox<String> fabri;
     private javax.swing.JButton first;
     private javax.swing.JButton guardar;
     private javax.swing.JButton inicio;

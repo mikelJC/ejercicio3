@@ -91,6 +91,7 @@ public class Clientes extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         jLabel6.setText("Telefono");
 
+        nif.setEditable(false);
         nif.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         nif.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -458,6 +459,7 @@ public class Clientes extends javax.swing.JFrame {
             poblacion.setText(r.getString("poblacion"));
             provincia.setText(r.getString("provincia"));
             telefono.setText(r.getString("telefono"));
+            nif.setEditable(false);
             
          } catch (SQLException ex) {
             Logger.getLogger(Fabricantes.class.getName()).log(Level.SEVERE, null, ex);}
@@ -480,6 +482,7 @@ public class Clientes extends javax.swing.JFrame {
         nuevo.setVisible(false);
         cancelar.setVisible(true);
         guardar.setVisible(true);
+        nif.setEditable(true);
         nif.setText("");
         nombre.setText("");
         direccion.setText("");

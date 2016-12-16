@@ -79,6 +79,7 @@ public class Fabricantes extends javax.swing.JFrame {
         pais.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
         pais.setText("Pais");
 
+        cod_fabricante.setEditable(false);
         cod_fabricante.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         cod_fabricante.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -200,7 +201,7 @@ public class Fabricantes extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(name, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
                             .addComponent(country)
-                            .addComponent(cod_fabricante))
+                            .addComponent(cod_fabricante, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(41, 41, 41)
@@ -364,6 +365,7 @@ public class Fabricantes extends javax.swing.JFrame {
         nuevo.setVisible(false);
         cancelar.setVisible(true);
         guardar.setVisible(true);
+        cod_fabricante.setEditable(true);
         cod_fabricante.setText("");
         name.setText("");
         country.setText("");
@@ -424,6 +426,7 @@ public class Fabricantes extends javax.swing.JFrame {
             cod_fabricante.setText(r.getString("cod_fabricante"));
             name.setText(r.getString("nombre"));
             country.setText(r.getString("pais"));
+            cod_fabricante.setEditable(false);
          } catch (SQLException ex) {
             Logger.getLogger(Fabricantes.class.getName()).log(Level.SEVERE, null, ex);}
         
