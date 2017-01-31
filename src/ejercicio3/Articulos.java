@@ -5,6 +5,8 @@
  */
 package ejercicio3;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.sql.ResultSet;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -13,20 +15,38 @@ import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 /**
  *
- * @author albert
+ * @author Mikel
+ * @version 1.0 beta
+ * 
  */
-public class Articulos extends javax.swing.JFrame {
 
-    static public ResultSet r;
-    static Connection connection;
+
+public class Articulos extends javax.swing.JFrame {
+    
     /**
-     * Creates new form Articulos
+     * Variable que guarda la consulta
+     */
+    static public ResultSet r;
+    
+    /**
+     * Variable para conectar la bd
+     */
+    static Connection connection;
+
+    /**
+     * método constructor de la sección artículos
+     * @throws SQLException 
      */
     public Articulos() throws SQLException {
+        
+        
         initComponents();
+        this.setLocationRelativeTo(null);
         cancelar.setVisible(false);
         guardar.setVisible(false);
         String url = "jdbc:mysql://localhost:3306/entornos";
@@ -35,19 +55,22 @@ public class Articulos extends javax.swing.JFrame {
         connection = DriverManager.getConnection(url,user,pass);
         
         Statement s = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE,ResultSet.CONCUR_UPDATABLE);
-        String query = "select * FROM articulos A";
+        String query = "select * FROM articulos";
         r = s.executeQuery(query);
         r.first();
-        cod_art.setText(r.getString("A.cod_articulo"));
-        arti.setText(r.getString("A.articulo"));
-    
-        peso.setText(r.getString("A.peso"));
-        preciovent.setText(r.getString("A.precio_venta"));
-        preciocost.setText(r.getString("A.precio_coste"));
-        existenc.setText(r.getString("A.existencias"));
+        cod_art.setText(r.getString("cod_articulo"));
+        arti.setText(r.getString("articulo"));
+        category.setText(r.getString("categoria"));
+        peso.setText(r.getString("peso"));
+        preciovent.setText(r.getString("precio_venta"));
+        preciocost.setText(r.getString("precio_coste"));
+        existenc.setText(r.getString("existencias"));
     
 
-    //llamada combobox//
+    /**
+    *llamada combobox
+    * @see https://docs.oracle.com/javase/tutorial/uiswing/components/combobox.html
+    **/
     connection = DriverManager.getConnection(url,user,pass);    
     String query2 = "select * from fabricantes";
     ResultSet r2;
@@ -59,7 +82,7 @@ public class Articulos extends javax.swing.JFrame {
         value1.addElement(r2.getString("NOMBRE"));
     }
     fabri.setModel(value1);
-    fabri.setSelectedItem(getNomFabricante(r.getInt("A.fabricante")));
+    fabri.setSelectedItem(getNomFabricante(r.getInt("fabricante")));
     
     }
 
@@ -103,123 +126,154 @@ public class Articulos extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel1.setText("Cod_Articulo");
+        jLabel1.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        jLabel1.setText("Cod. Articulo");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel2.setText("Articulo");
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel3.setText("Fabricante");
 
         cod_art.setEditable(false);
-        cod_art.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        cod_art.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
 
-        arti.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        arti.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        arti.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                artiActionPerformed(evt);
+            }
+        });
 
-        jLabel4.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel4.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel4.setText("Peso");
 
-        jLabel5.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel5.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel5.setText("Categoria");
 
-        jLabel6.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel6.setText("Precio_venta");
+        jLabel6.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        jLabel6.setText("Precio venta");
 
-        jLabel7.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
-        jLabel7.setText("Precio_coste");
+        jLabel7.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
+        jLabel7.setText("Precio coste");
 
-        jLabel8.setFont(new java.awt.Font("Tahoma", 1, 14)); // NOI18N
+        jLabel8.setFont(new java.awt.Font("Calibri", 1, 18)); // NOI18N
         jLabel8.setText("Existencias");
 
-        peso.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        peso.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         peso.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 pesoActionPerformed(evt);
             }
         });
 
-        category.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        category.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        category.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                categoryActionPerformed(evt);
+            }
+        });
 
-        preciovent.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        preciovent.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
 
-        preciocost.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        preciocost.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
 
-        existenc.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        existenc.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
 
+        first.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         first.setText("Primero");
+        first.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         first.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 firstActionPerformed(evt);
             }
         });
 
+        next.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         next.setText("Siguiente");
+        next.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         next.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nextActionPerformed(evt);
             }
         });
 
+        previous.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         previous.setText("Anterior");
+        previous.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         previous.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 previousActionPerformed(evt);
             }
         });
 
-        last.setText("Ultimo");
+        last.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
+        last.setText("Último");
+        last.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         last.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 lastActionPerformed(evt);
             }
         });
 
+        nuevo.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         nuevo.setText("Nuevo");
+        nuevo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 255, 0)));
         nuevo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nuevoActionPerformed(evt);
             }
         });
 
+        editar.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         editar.setText("Editar");
+        editar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 255)));
         editar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editarActionPerformed(evt);
             }
         });
 
+        guardar.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         guardar.setText("Guardar");
+        guardar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 0)));
         guardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 guardarActionPerformed(evt);
             }
         });
 
+        cancelar.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         cancelar.setText("Cancelar");
+        cancelar.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
         cancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cancelarActionPerformed(evt);
             }
         });
 
+        inicio.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         inicio.setText("Inicio");
+        inicio.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         inicio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 inicioActionPerformed(evt);
             }
         });
 
+        delete.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         delete.setText("Eliminar");
+        delete.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 0, 0)));
         delete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 deleteActionPerformed(evt);
             }
         });
 
-        jLabel9.setFont(new java.awt.Font("Tahoma", 0, 36)); // NOI18N
+        jLabel9.setFont(new java.awt.Font("Calibri", 0, 36)); // NOI18N
         jLabel9.setText("ARTÍCULOS");
 
+        fabri.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         fabri.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         fabri.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -268,21 +322,21 @@ public class Articulos extends javax.swing.JFrame {
                             .addComponent(category, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(peso, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(fabri, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(85, 85, 85)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(77, 77, 77)
+                                .addGap(120, 120, 120)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(31, 31, 31)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(guardar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(nuevo, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(36, 36, 36)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(editar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                    .addComponent(cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(editar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(48, 48, 48))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(132, 132, 132))))
+                                .addGap(111, 111, 111))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -334,7 +388,7 @@ public class Articulos extends javax.swing.JFrame {
                         .addGap(16, 16, 16))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(30, 30, 30)))
+                        .addGap(43, 43, 43)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(preciocost, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7))
@@ -358,6 +412,14 @@ public class Articulos extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    
+    /**
+     * Metodo que toma el nombre del fabricante y devuelve el código de este mismo.
+     * 
+     * @param nombre variable que contiene el nombre del fabricante.
+     * @return codigo - variable que contiene el código del fabricante.
+     * 
+     */
     public int getCodFabricante(String nombre){
         
         int codigo=0;
@@ -380,7 +442,12 @@ public class Articulos extends javax.swing.JFrame {
   
     
     
-    
+     /**
+     * Metodo que toma el código del fabricante y devuelve el nombre de este mismo.
+     * 
+     * @return nombre - variable que contiene el nombre del fabricante.
+     * @param cod_fabricante variable que contiene el código del fabricante.
+     */
     
     public String getNomFabricante(int cod_fabricante){
         
@@ -400,20 +467,19 @@ public class Articulos extends javax.swing.JFrame {
         }
         return nombre;
         }
-    
-    
 
     
     private void firstActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstActionPerformed
         try {
             r.first();
-            cod_art.setText(r.getString("A.cod_articulo"));
-            arti.setText(r.getString("A.articulo"));
-            fabri.setSelectedItem(getNomFabricante(r.getInt("A.fabricante")));
-            peso.setText(r.getString("A.peso"));
-            preciovent.setText(r.getString("A.precio_venta"));
-            preciocost.setText(r.getString("A.precio_coste"));
-            existenc.setText(r.getString("A.existencias"));
+            cod_art.setText(r.getString("cod_articulo"));
+            arti.setText(r.getString("articulo"));
+            category.setText(r.getString("categoria"));
+            fabri.setSelectedItem(getNomFabricante(r.getInt("fabricante")));
+            peso.setText(r.getString("peso"));
+            preciovent.setText(r.getString("precio_venta"));
+            preciocost.setText(r.getString("precio_coste"));
+            existenc.setText(r.getString("existencias"));
             
             
             
@@ -426,13 +492,14 @@ public class Articulos extends javax.swing.JFrame {
     private void lastActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastActionPerformed
         try {
             r.last();
-            cod_art.setText(r.getString("A.cod_articulo"));
-            arti.setText(r.getString("A.articulo"));
-            fabri.setSelectedItem(getNomFabricante(r.getInt("A.fabricante")));
-            peso.setText(r.getString("A.peso"));
-            preciovent.setText(r.getString("A.precio_venta"));
-            preciocost.setText(r.getString("A.precio_coste"));
-            existenc.setText(r.getString("A.existencias"));
+            cod_art.setText(r.getString("cod_articulo"));
+            arti.setText(r.getString("articulo"));
+            category.setText(r.getString("categoria"));
+            fabri.setSelectedItem(getNomFabricante(r.getInt("fabricante")));
+            peso.setText(r.getString("peso"));
+            preciovent.setText(r.getString("precio_venta"));
+            preciocost.setText(r.getString("precio_coste"));
+            existenc.setText(r.getString("existencias"));
             
             
             // TODO add your handling code here:
@@ -445,13 +512,14 @@ public class Articulos extends javax.swing.JFrame {
 
         try {
             if(r.next()){
-                cod_art.setText(r.getString("A.cod_articulo"));
-                arti.setText(r.getString("A.articulo"));
-                fabri.setSelectedItem(getNomFabricante(r.getInt("A.fabricante")));
-                peso.setText(r.getString("A.peso"));
-                preciovent.setText(r.getString("A.precio_venta"));
-                preciocost.setText(r.getString("A.precio_coste"));
-                existenc.setText(r.getString("A.existencias"));
+                cod_art.setText(r.getString("cod_articulo"));
+                arti.setText(r.getString("articulo"));
+                category.setText(r.getString("categoria"));
+                fabri.setSelectedItem(getNomFabricante(r.getInt("fabricante")));
+                peso.setText(r.getString("peso"));
+                preciovent.setText(r.getString("precio_venta"));
+                preciocost.setText(r.getString("precio_coste"));
+                existenc.setText(r.getString("existencias"));
                 
             }
             
@@ -466,13 +534,14 @@ public class Articulos extends javax.swing.JFrame {
     private void previousActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousActionPerformed
         try {
             if(r.previous()){
-                cod_art.setText(r.getString("A.cod_articulo"));
-                arti.setText(r.getString("A.articulo"));
-                fabri.setSelectedItem(getNomFabricante(r.getInt("A.fabricante")));
-                peso.setText(r.getString("A.peso"));
-                preciovent.setText(r.getString("A.precio_venta"));
-                preciocost.setText(r.getString("A.precio_coste"));
-                existenc.setText(r.getString("A.existencias"));
+                cod_art.setText(r.getString("cod_articulo"));
+                arti.setText(r.getString("articulo"));
+                category.setText(r.getString("categoria"));
+                fabri.setSelectedItem(getNomFabricante(r.getInt("fabricante")));
+                peso.setText(r.getString("peso"));
+                preciovent.setText(r.getString("precio_venta"));
+                preciocost.setText(r.getString("precio_coste"));
+                existenc.setText(r.getString("existencias"));
                 
             }
             
@@ -522,6 +591,7 @@ try {
             r.first();
                 cod_art.setText(r.getString("cod_articulo"));
                 arti.setText(r.getString("articulo"));
+                category.setText(r.getString("categoria"));
                 fabri.setSelectedItem(r.getString("fabricante"));
                 peso.setText(r.getString("peso"));
                 preciovent.setText(r.getString("precio_venta"));
@@ -551,6 +621,7 @@ try {
         cod_art.setEditable(true);
         cod_art.setText("");
         arti.setText("");
+        category.setText("");
         fabri.setSelectedItem("");
         peso.setText("");
         preciovent.setText("");
@@ -585,6 +656,7 @@ try {
         r.first();
         cod_art.setText(r.getString("cod_articulo"));
                 arti.setText(r.getString("articulo"));
+                category.setText(r.getString("categoria"));
                 fabri.setSelectedItem(r.getString("fabricante"));
                 peso.setText(r.getString("peso"));
                 preciovent.setText(r.getString("precio_venta"));
@@ -642,6 +714,7 @@ try {
         r.first();
         cod_art.setText(r.getString("cod_articulo"));
                 arti.setText(r.getString("articulo"));
+                category.setText(r.getString("categoria"));
                 fabri.setSelectedItem(r.getString("fabricante"));
                 peso.setText(r.getString("peso"));
                 preciovent.setText(r.getString("precio_venta"));
@@ -678,6 +751,14 @@ try {
         // TODO add your handling code here:
        
     }//GEN-LAST:event_fabriActionPerformed
+
+    private void artiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_artiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_artiActionPerformed
+
+    private void categoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_categoryActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_categoryActionPerformed
     
     /**
      * @param args the command line arguments

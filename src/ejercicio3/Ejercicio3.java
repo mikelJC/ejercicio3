@@ -9,11 +9,14 @@ import java.sql.SQLException;
 
 /**
  *
- * @author albert
+ * @author Mikel
+ * @version 1.0 beta
+ * 
  */
 public class Ejercicio3 {
 
     /**
+     * main que muestra el menú pricipal del programa 
      * @param args the command line arguments
      */
     public static void main(String[] args) throws SQLException {
