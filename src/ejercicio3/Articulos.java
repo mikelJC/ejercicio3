@@ -40,7 +40,7 @@ public class Articulos extends javax.swing.JFrame {
 
     /**
      * método constructor de la sección artículos
-     * @throws SQLException 
+     * @throws SQLException excepción que proporciona información sobre los errores en la conexión a la BD
      */
     public Articulos() throws SQLException {
         

@@ -203,7 +203,7 @@ public class menu extends javax.swing.JFrame {
     
         /**
          * método para cerrar la aplicación
-         * @deprecated
+         * @deprecated no funciona todavía
          */
         public void cerrar(){ 
             try {
@@ -222,6 +222,7 @@ public class menu extends javax.swing.JFrame {
          
         /**
          * método que confirma si quieres cerrar la aplicación
+         * @deprecated no funciona todavía
          */
         
         public void confirmarSalida(){

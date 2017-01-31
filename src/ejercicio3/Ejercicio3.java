@@ -18,6 +18,7 @@ public class Ejercicio3 {
     /**
      * main que muestra el menú pricipal del programa 
      * @param args the command line arguments
+     * @throws SQLException excepción que proporciona información sobre los errores en la conexión a la BD
      */
     public static void main(String[] args) throws SQLException {
         // TODO code application logic here

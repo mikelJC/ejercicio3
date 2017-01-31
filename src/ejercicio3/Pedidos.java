@@ -36,7 +36,7 @@ public final class Pedidos extends javax.swing.JFrame {
 
     /**
      * método constructor de la sección pedidos
-     * @throws SQLException 
+     * @throws SQLException excepción que proporciona información sobre los errores en la conexión a la BD
      */
     public Pedidos() throws SQLException {
         initComponents();
@@ -705,7 +705,7 @@ public final class Pedidos extends javax.swing.JFrame {
     /**
       * Metodo que toma el las lineas de un pedido a mostrar
       * 
-      *@param numerodepedido - variable que contiene el códgo del pedido 
+      *@param numeropedido - variable que contiene el códgo del pedido 
       */
     
     

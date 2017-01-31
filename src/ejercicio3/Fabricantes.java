@@ -28,7 +28,7 @@ public class Fabricantes extends javax.swing.JFrame {
 
     /**
      * método constructor de la sección Fabricantes
-     * @throws SQLException 
+     * @throws SQLException excepción que proporciona información sobre los errores en la conexión a la BD
      */
     
     public Fabricantes() throws SQLException {

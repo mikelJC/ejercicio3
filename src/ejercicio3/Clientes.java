@@ -30,7 +30,7 @@ public class Clientes extends javax.swing.JFrame {
     
      /**
      * método constructor de la sección clientes
-     * @throws SQLException 
+     * @throws SQLException excepción que proporciona información sobre los errores en la conexión a la BD
      */
     public Clientes() throws SQLException {
         initComponents();
